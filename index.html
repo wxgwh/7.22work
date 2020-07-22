@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            padding: 0;
+            margin: 0;
+        }
+        .box{
+            width: 1204px;
+            height: 752px;
+            margin: 20px auto;
+            background: url(timg.png) no-repeat;
+            overflow: hidden;
+            position: relative;
+        }
+        .box-start{
+            width: 160px;
+            height: 32px;
+            position: absolute;
+            bottom: 120px;
+            left: 500px;
+            background: #1E90FF;
+            border-radius: 6px;
+            line-height: 32px;
+            font-size: 18px;
+            font-weight: 700;
+            color: #fff;
+            text-align: center;
+            letter-spacing: 4px;
+            cursor: pointer;
+        }
+        .end{
+            width: 400px;
+            height: 100px;
+            line-height: 100px;
+            color: #fff;
+            text-align: center;
+            letter-spacing: 10px;
+            font-size: 60px;
+            font-weight: 700;
+            position: absolute;
+            top: 360px;
+            left:420px;
+            display: none;
+        }
+        .rule{
+            width: 1204px;
+            height: 60px;
+            margin: 0 auto;
+        }
+        .rule div{
+            width: 100%;
+            height: 30px;
+            line-height: 30px;
+            font-size: 18px;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="box">
+        <img src="timg.png" alt="">
+        <div class="box-start">
+            开始游戏
+        </div>
+        <div class="end">游戏结束！</div>
+    </div>
+    <div class="rule">
+        <div>打字游戏</div>
+        <div>游戏规则：在键盘输入来消除字母，当五个字母未消除游戏结束。</div>
+    </div>
+
+
+    <script>
+        var letters=["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
+        var colors=["red","orange","yellow","green","blue","pink","#FFB6C1","#FFF0F5","#4B0082","#483D8B","#5C4033","#CC99FF","#00FFFF","#003300"]
+        var boxStart=document.querySelector(".box-start");
+        var end=document.querySelector(".end");
+        var divs=[]
+        var box=document.querySelector(".box");
+        function create(num){
+            var current=[];
+            for(var i=0;i<num;i++){
+            current.push(letters[Math.floor(letters.length*Math.random())]);
+        }
+        for(var i=0;i<current.length;i++){
+            var letter = document.createElement("div");
+            letter.innerHTML=current[i];
+            box.appendChild(letter);
+            letter.style.cssText="position:absolute;left:"+(1104*Math.random())+"px;top:20px;color:"+colors[Math.floor(colors.length*Math.random())]+";font-size:100px;"
+            
+            divs.push(letter);
+            }
+        }
+        boxStart.onclick=function(){
+            start();
+            boxStart.style.display="none";
+        }
+        create(5);
+        // start();
+        var speed=5;
+        
+        var nn=5;
+        function start(){
+            var t=setInterval(function(){
+                for(var i=0;i<divs.length;i++){
+                    divs[i].style.top=divs[i].offsetTop+speed+"px";
+                }
+                for(let i=0;i<divs.length;i++){
+                    if(divs[i].getBoundingClientRect().top>650){
+                        box.removeChild(divs[i]);
+                        divs.splice(i,1);
+                        create(1);
+                        nn--;
+                        if(nn==0){
+                            clearInterval(t);
+                            end.style.display="block";
+                        }
+                    }
+                }
+            },40)
+        }
+
+        document.onkeydown=function(ev){
+            var letter = String.fromCharCode(ev.keyCode);
+            for(let i=0;i<divs.length;i++){
+                if(divs[i].innerHTML==letter){
+                    box.removeChild(divs[i]);
+                    divs.splice(i,1);
+                    create(1);
+                    break;
+                }
+            }
+        }
+        
+    </script>
+</body>
+</html>
